@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Bubble Funny Game</title>
+    <style>
+        #bubble {
+            border: 2px solid grey;
+            margin-left: 250px;
+        }
+
+
+        .btn {
+            background-color: red;
+            color: seashell;
+            border-radius: 8px;
+
+        }
+
+        .heading {
+            text-align: end;
+            margin-top: 8px;
+            margin-bottom: 10px;
+            margin-right: 73px;
+        }
+
+        .btn-div {
+            display: flex;
+            justify-content: flex-end;
+            width: 1054px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style='width:800px'>
+        <h2 class="heading">Bubbles App</h2>
+    </div>
+    <canvas id='bubble' width='800' height='470'>
+    </canvas>
+    <script>
+        const xdif = 9;
+        const ydif = 46.5;
+        var canvas = document.getElementById('bubble');
+        var ctx = canvas.getContext('2d');
+
+        function bubbleArrow() {
+            var y2 = 77;
+            for (var i = 0; i < 4; i++) {
+                if (i === 0)
+                    ctx.fillStyle = 'yellow';
+                else if (i === 1)
+                    ctx.fillStyle = 'blue';
+                else if (i === 2)
+                    ctx.fillStyle = 'red';
+                else
+                    ctx.fillStyle = 'green';
+                // This portion is for Bubble
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(70, y2, 40, 0, Math.PI * 2,);
+                ctx.fill();
+                ctx.stroke();
+                // This portion is for Arrow
+                ctx.beginPath();
+                ctx.fillStyle = 'black';
+                ctx.lineWidth = 2.5;
+                ctx.moveTo(740, y2);
+                ctx.lineTo(710, y2);
+                ctx.lineTo(712, y2 - 2);
+                ctx.arcTo(710, y2, 712, y2 + 2, 8);
+                ctx.lineTo(708, y2);
+                ctx.fill();
+                ctx.stroke();
+                y2 += 100;
+
+            }
+        } bubbleArrow();
+
+        var mouse = {
+            x: undefined,
+            y: undefined
+        }
+        var animationCB1 = true;
+        var animationCB2 = true;
+        var animationCB3 = true;
+        var animationCB4 = true;
+        window.addEventListener('click', function (event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+            var arr = [], changingY = 77;
+            var minDist = Number.MAX_VALUE;
+            for (var g = 0; g < 4; g++) {
+                arr[g] = Math.round(Math.sqrt(((mouse.x - xdif - 320) * (mouse.x - xdif - 320)) + ((mouse.y - ydif - changingY) * (mouse.y - ydif - changingY))));
+                if (minDist > arr[g]) {
+                    minDist = arr[g];
+                }
+                changingY += 100
+            }
+            if (minDist === arr[0]) {
+                if (minDist <= 40 && animationCB1 === true) {
+                    window.animate(740, 77);
+                    animationCB1 = false;
+                }
+            }
+            else if (minDist === arr[1]) {
+                if (minDist <= 40 && animationCB2 === true) {
+                    window.animate(740, 177);
+                    animationCB2 = false;
+                }
+            }
+            else if (minDist === arr[2]) {
+                if (minDist <= 40 && animationCB3 === true) {
+                    window.animate(740, 277);
+                    animationCB3 = false;
+                }
+            }
+            else if (minDist === arr[3]) {
+                if (minDist <= 40 && animationCB4 === true) {
+                    window.animate(740, 377);
+                    animationCB4 = false;
+                }
+            }
+        })
+
+        function animate() {
+            var x1 = arguments[0], y1 = arguments[1];
+            requestAnimationFrame(function loop() {
+
+                ctx.clearRect(111, y1 + 13, 750, -27);
+                ctx.beginPath();
+                ctx.fillStyle = 'black';
+                ctx.lineWidth = 2.5;
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x1 - 30, y1);
+                ctx.lineTo(x1 - 28, y1 - 2);
+                ctx.arcTo(x1 - 30, y1, x1 - 28, y1 + 2, 8);
+                ctx.lineTo(x1 - 32, y1);
+                ctx.fill();
+                ctx.stroke();
+                x1 -= 3;
+                if (x1 > 142) {
+                    window.requestAnimationFrame(loop);
+                }
+                if (x1 == 140) {
+                    ctx.lineWidth = 1;
+                    ctx.fillStyle = 'grey';
+                    ctx.beginPath();
+                    ctx.arc(70, y1, 40, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+            })
+        }
+
+        function resetBtn() {
+            ctx.clearRect(0, 0, 800, 600);
+            bubbleArrow();
+            animationCB1 = true;
+            animationCB2 = true;
+            animationCB3 = true;
+            animationCB4 = true;
+
+        }
+
+    </script>
+    <div class="btn-div">
+        <button onClick="resetBtn()" type="button" class="btn">Reset</button>
+    </div>
+</body>
+
+</html>
